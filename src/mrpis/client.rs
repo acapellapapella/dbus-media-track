@@ -11,6 +11,9 @@ pub enum MrpisError {
 
     #[error(transparent)]
     VariantError(#[from] zbus::zvariant::Error),
+
+    #[error("Unknown PlaybackStatus: {0}")]
+    UnknownStatus(String),
 }
 
 pub struct Player {
