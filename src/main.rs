@@ -7,7 +7,7 @@ use futures_util::StreamExt;
 
 use crate::mrpis::{
     client::find,
-    metadata::{TrackInfo, get_metadata},
+    metadata::{PlaybackStatus, TrackInfo, get_metadata},
 };
 
 #[derive(Parser)]
@@ -31,10 +31,11 @@ async fn main() {
         return;
     }
 
-    let player = find(cli.player.as_deref(), true)
-        .await
-        .unwrap()
-        .expect("no playing MPRIS player");
+    let Some(player) = find(cli.player.as_deref(), false).await.unwrap() else {
+        let mut stdout = std::io::stdout().lock();
+        let _ = writeln!(stdout);
+        return;
+    };
     let metadata = get_metadata(&player).await.unwrap();
     emit(&metadata, &cli.tokens);
 }
@@ -77,20 +78,22 @@ async fn run_service(cli: &Cli) {
 }
 
 fn emit(metadata: &TrackInfo, tokens: &[String]) {
-    let line = if tokens.is_empty() {
-        format!("{metadata:#?}")
-    } else {
-        let parts: Vec<String> = tokens
+    let wants_status = tokens.iter().any(|t| t == "--status");
+    let line = match metadata.status {
+        PlaybackStatus::Paused | PlaybackStatus::Stopped if !wants_status => String::new(),
+        _ if tokens.is_empty() => format!("{metadata:#?}"),
+        _ => tokens
             .iter()
             .filter_map(|t| match t.as_str() {
                 "--title" => metadata.title.clone(),
                 "--artist" => metadata.artist.as_ref().map(|v| v.join(", ")),
                 "--album" => metadata.album.clone(),
                 "--art_url" => metadata.art_url.clone(),
+                "--status" => Some(metadata.status.as_str().to_string()),
                 _ => Some(t.clone()),
             })
-            .collect();
-        parts.join(" ")
+            .collect::<Vec<_>>()
+            .join(" "),
     };
 
     let mut stdout = std::io::stdout().lock();
