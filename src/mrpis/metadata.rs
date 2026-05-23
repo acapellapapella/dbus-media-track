@@ -31,7 +31,6 @@ impl PlaybackStatus {
 }
 
 #[derive(Debug)]
-#[allow(dead_code)]
 pub struct TrackInfo {
     pub status: PlaybackStatus,
     pub title: Option<String>,
