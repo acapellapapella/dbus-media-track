@@ -1,5 +1,5 @@
 # dbus-media-track
-dbus-media-tracking scans the Media Player and provides information, intended for use as a service.
+dbus-media-track scans the Media Player and provides information, intended for use as a service.
 
 ## Features
 ### Service mode:
