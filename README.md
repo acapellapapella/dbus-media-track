@@ -19,7 +19,7 @@ dbus-media-track scans the Media Player and provides information, intended for u
 - Parsing a specific instance. Expects an argument, e.x.: `--player spotify`.
 - Must be the second argument when calling or the first if `--service` is not used.
 ### `--title`
-- Returns the found value: "__title__"
+- Returns the found value: "__title__".
 ```rust
 title: Some(
         "Master Of Puppets", // <- this
@@ -27,33 +27,43 @@ title: Some(
 ```
 
 ### `--artist`
-- Returns the found value: "__artist__"
+- Returns the found value: "__artist__".
 ```rust
 artist: Some(
         [
-            "Metallica", // <- this
+            "Metallica", // <-
         ],
     ),
 ```
 
 ### `--album`
-- Returns the found value: "__album__"
+- Returns the found value: "__album__".
 ```rust
 album: Some(
-        "Master Of Puppets (Remastered)", // <- this
+        "Master Of Puppets (Remastered)", // <-
     ),
 ```
 
 ### `--art_url`
-- Returns the found value: "__art_url__"
+- Returns the found value: "__art_url__".
 ```rust
 art_url: Some(
-        "https://art.example.com", // <- this
+        "https://art.example.com", // <-
     ),
 ```
 
+### `--status`
+- Displays the __PlaybackStatus__ variant returned by a D-Bus method.
+```bash
+dict entry(
+         string "PlaybackStatus"
+         variant string "Paused" # <-
+      )
+```
+> Note: if the PlaybackStatus != Playing, an empty string is returned.
+
 ### Quotes (`" "`)
-- Separator or add-on between received information
+- Separator or add-on between received information.
 ```bash
 dbus-media-track --player spotify "Song:" --artist "—" --title
 Song: Metallica — Master Of Puppets
