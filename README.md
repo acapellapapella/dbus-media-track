@@ -22,7 +22,7 @@ dbus-media-track scans the Media Player and provides information, intended for u
 - Returns the found value: "__title__".
 ```rust
 title: Some(
-        "Master Of Puppets", // <- this
+        "Master Of Puppets", // <-
     )
 ```
 
